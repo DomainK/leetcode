@@ -1,0 +1,39 @@
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        int length = nums1.size() + nums2.size();
+
+        if(length % 2 == 0)
+            return (findNoknumber(nums1, nums2, length / 2) + findNoknumber(nums1, nums2, length / 2 + 1)) / 2.0;
+        else
+            return findNoknumber(nums1, nums2, length / 2 + 1);
+    }
+
+    int findNoknumber(vector<int>& nums1, vector<int>& nums2, int k){
+        int ofs1 = 0; int ofs2 = 0;
+        int idx1 = 0; int idx2 = 0;
+        int size1 = nums1.size();
+        int size2 = nums2.size();
+        while(true){
+            if(ofs1 == size1)
+                return nums2[ofs2 + k - 1];
+
+            if(ofs2 == size2)
+                return nums1[ofs1 + k - 1];
+            
+            if(k == 1)
+                return min(nums1[ofs1], nums2[ofs2]);
+        
+            idx1 = min(k/2 - 1 + ofs1, size1 - 1);
+            idx2 = min(k/2 - 1 + ofs2, size2 - 1);
+            if(nums1[idx1] <= nums2[idx2]){
+                k -= (idx1 - ofs1 + 1);
+                ofs1 = idx1 + 1;
+            }
+            else{
+                k -= (idx2 - ofs2 + 1);
+                ofs2 = idx2 + 1;
+            }
+        }
+    }
+};
