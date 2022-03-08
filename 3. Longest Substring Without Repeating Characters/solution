@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        deque<char> table;
+        int result = 0;
+        int result_max = 0;
+        for(auto str : s){
+            for(auto itr = table.begin(); itr != table.end(); itr++){
+                if(*itr == str){
+                    table.erase(table.begin(), itr+1);
+                    break;
+                }
+            }
+            table.push_back(str);
+            result = table.size();
+
+            if(result_max < result)
+                result_max = result;
+        }
+        return result_max;
+    }
+};
