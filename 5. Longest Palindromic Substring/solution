@@ -1,0 +1,34 @@
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        string result = recursion(s, s.size());
+        return result;
+    }
+    string recursion(string str, int wdt){
+        int length = str.size();
+        bool find = true;
+        int start = 0;
+        int left = 0;
+        int right = 0;
+        string ans;
+        while(true){
+            left = start;
+            right = wdt + start - 1;
+            while(left < right){
+                find = true;
+                if(str[left++] != str[right--]){
+                    find = false;
+                    break;
+                }
+            }
+            if(find == false && start + wdt == length){
+                return recursion(str, wdt - 1);
+            }
+            if(find == true){
+                ans.assign(str, start, wdt);
+                return ans;
+            }
+            start++;
+        }
+    }
+};
