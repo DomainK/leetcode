@@ -1,0 +1,54 @@
+class Solution {
+public:
+    string convert(string s, int numRows) {
+        if(numRows == 1)
+            return s;
+        else{
+            int col = s.size() / (2 * numRows - 2) * (numRows - 1);
+            int rest = s.size() % (2 * numRows - 2);
+            string result;
+            if(rest == 0){
+                char zch[col][numRows];
+                result = ZstrConvert(s, (char**)zch, numRows);
+            }
+            else if(rest <= numRows){
+                char zch[col + 1][numRows];
+                result = ZstrConvert(s, (char**)zch, numRows);
+            }
+            else{
+                char zch[col + rest - numRows + 1][numRows];
+                result = ZstrConvert(s, (char**)zch, numRows);
+            }
+            
+            return result;
+        }
+    }
+    string ZstrConvert(string s, char** zch, int numRows){
+        string result;
+        int row = 0;
+        auto itr = s.begin();
+        while(itr != s.end()){
+                for(int i = 0; i < numRows; i++){
+                    if(row % (numRows - 1) == 0)
+                        *((char*)zch + row*numRows + i) = *itr++;
+                    else if(i == numRows - (row % (numRows - 1)) - 1)
+                        *((char*)zch + row*numRows + i) = *itr++;
+                    else
+                        *((char*)zch + row*numRows + i) = ' ';
+                    if(itr == s.end()){
+                        for(int j = i + 1; j < numRows; j++)
+                            *((char*)zch + row*numRows + j) = ' ';
+                            break;
+                    }
+                }
+            row++;
+        }
+        for(int j = 0; j < numRows; j++)
+            for(int k = 0; k < row; k++){
+                if(*((char*)zch + k*numRows + j) != ' '){
+                    result.push_back(*((char*)zch + k*numRows + j));
+                }
+            }
+        return result;
+    }
+};
