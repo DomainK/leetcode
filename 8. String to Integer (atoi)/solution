@@ -1,0 +1,41 @@
+class Solution {
+public:
+    int myAtoi(string s) {
+        long long result = 0;
+        const long long result_max = pow(2, 31) - 1;
+        const long long result_min = -1 * pow(2, 31);
+        int begin = 0;
+        while(s[begin] == ' ')
+            begin++;
+        
+        bool is_reading = false;
+        int is_pos = 1;
+        while(true){
+            if(s[begin] == ' ' && !is_reading){
+                begin++;
+                continue;
+            }
+            else if(s[begin] == '-' && !is_reading){
+                is_pos = -1;
+                begin++;
+                is_reading = true;
+                continue;
+            }else if(s[begin] == '+' && !is_reading){
+                is_pos = 1;
+                begin++;
+                is_reading = true;
+                continue;
+            } else if(s[begin] - '0' <= 9 && s[begin] >= '0'){
+                is_reading = true;
+                result = result * 10 + (s[begin] - '0') * is_pos;
+                if(result >= result_max || result <= result_min){
+                    result = is_pos == -1 ? max(result, result_min) : min(result, result_max);
+                    break;
+                }
+                begin++;
+            }else
+                break;
+        }
+        return int(result);
+    }
+};
