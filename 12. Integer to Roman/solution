@@ -1,0 +1,33 @@
+class Solution {
+public:
+    string intToRoman(int num) {
+        string result = "";
+        vector<vector<string>> f{
+            {"I", "IV", "V", "IX"},
+            {"X", "XL", "L", "XC"},
+            {"C", "CD", "D", "CM"},
+            {"M"},
+        };
+        int pos = 0;
+        while(num != 0){
+            int tmp = num % 10;
+            bool flag = false;
+            if(tmp == 9){
+                result = f[pos][3] + result;
+            }else if(tmp >= 5){
+                string str(f[pos][2]);
+                for(int i = tmp - 5; i != 0; i--)
+                    str = str + f[pos][0];
+                result = str + result;
+            }else if(tmp == 4){
+                result = f[pos][1] + result;
+            }else{
+                for(int i = tmp; i != 0; i--)
+                    result = f[pos][0] + result;
+            }
+            num /= 10;
+            pos++;
+        }
+        return result;
+    }
+};
