@@ -1,0 +1,24 @@
+class Solution {
+public:
+    bool isValid(string s) {
+        if(s.size() % 2 == 1)
+            return false;
+
+        unordered_map<char, char> hashtable{
+            {'(', ')'}, {'[', ']'}, {'{', '}'}
+        };
+
+        stack<char> stk;
+        for(auto ch : s){
+            if(hashtable.count(ch) != 0)
+                stk.push(hashtable[ch]);
+            else{
+                if(!stk.empty() && ch == stk.top())
+                    stk.pop();
+                else
+                    return false;
+            }
+        }
+        return stk.empty();
+    }
+};
