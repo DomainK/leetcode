@@ -1,0 +1,27 @@
+class Solution {
+public:
+    vector<string> generateParenthesis(int n) {
+        vector<string> result;
+        string combination("");
+        trackBack(result, combination, n, 0);
+        return result;
+    }
+
+    void trackBack(vector<string>& result, string& combination, int n, int pairNums){
+        if(n == 0){
+            result.push_back(combination);
+        }else{
+            if(combination.size() - 2 * pairNums < n){
+                combination.push_back('(');
+                trackBack(result, combination, n, pairNums);
+                combination.pop_back();
+            }
+            if(combination.empty() || combination.size() - 2 * pairNums == 0){
+                return;
+            }
+            combination.push_back(')');
+            trackBack(result, combination, n - 1, pairNums + 1);
+            combination.pop_back();
+        }
+    }
+};
