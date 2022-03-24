@@ -1,0 +1,14 @@
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        auto itr = nums.begin();
+        while(itr != nums.end() - 1){
+            auto num = itr + 1;
+            if(*itr == *num){
+               nums.erase(num);
+            }else
+                ++itr;
+        }
+        return nums.size();
+    }
+};
