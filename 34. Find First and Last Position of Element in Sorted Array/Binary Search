@@ -1,0 +1,28 @@
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        int left = BinarySearch(nums, target, true);
+        int right = BinarySearch(nums, target, false) - 1;
+        if(left <= right && nums[left] == target && nums[right] == target && right < nums.size())
+            return vector<int>{left, right};
+        else
+            return vector<int>{-1, -1};
+    }
+
+    int BinarySearch(vector<int>& nums, int target, bool isleft){
+        int length = nums.size();
+        int left = 0;
+        int right = length - 1;
+        int result = length;
+        while(left <= right){
+            int mid = left + (right - left) / 2;
+            if(nums[mid] > target || (isleft && nums[mid] >= target)){
+                right = mid - 1;
+                result = mid;
+            }else{
+                left = mid + 1;
+            }
+        }
+        return result;
+    }
+};
