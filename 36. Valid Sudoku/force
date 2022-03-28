@@ -1,0 +1,29 @@
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        vector<unordered_set<char>> threeMetrix(9);
+        vector<unordered_set<char>> colSet(9);
+
+        for(int i = 0; i < board.size(); ++i){
+            unordered_set<char> rowSet;
+            for(int j = 0; j < board[0].size(); ++j){
+                if(board[i][j] == '.')
+                    continue;
+                if(rowSet.find(board[i][j]) != rowSet.end()){
+                    return false;
+                }
+                if(colSet[j].find(board[i][j]) != colSet[j].end()){
+                    return false;
+                }
+                if(threeMetrix[(i / 3) * 3 + (j / 3)].find(board[i][j]) != threeMetrix[(i / 3) * 3 + (j / 3)].end()){
+                    return false;
+                }
+                colSet[j].insert(board[i][j]);
+                rowSet.insert(board[i][j]);
+                threeMetrix[(i / 3) * 3 + (j / 3)].insert(board[i][j]);
+            }
+        }
+
+        return true;
+    }
+};
