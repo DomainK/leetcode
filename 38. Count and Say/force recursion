@@ -1,0 +1,43 @@
+class Solution {
+public:
+    string countAndSay(int n) {
+        if(n == 1)
+            return "1";
+        string lastStr(countAndSay(n - 1));
+        string ThisStr("");
+        element dic(0);
+        for(char ch : lastStr){
+            if(dic.count == 0){
+                dic.ch = ch;
+                dic.count += 1;
+            }else{
+                if(ch == dic.ch){
+                    dic.count += 1;;
+                }else{
+                    ThisStr = ThisStr + dic.charcount() + dic.ch;
+                    dic.ch = ch;
+                    dic.count = 1;
+                }
+            }
+        }
+        ThisStr = ThisStr + dic.charcount() + dic.ch;
+        dic.clear();
+        
+        return ThisStr;
+    }
+
+    struct element{
+        char ch;
+        int count;
+
+        element(const char& c, const int ct): ch(c), count(ct) {}
+        element(const int ct): ch(' '), count(ct) {}
+        void clear(){
+            this->ch = ' ';
+            this->count = 0;
+        }
+        char charcount(){
+            return char('0' + this->count);
+        }
+    };
+};
