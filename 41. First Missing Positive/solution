@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int firstMissingPositive(vector<int>& nums) {
+        int length = nums.size();
+        for(int i = 0; i < length; ++i){
+            if(nums[i] <= 0)
+                nums[i] = length + 1;
+        }
+
+        for(int j = 0; j < length; ++j){
+            int num = abs(nums[j]);
+            if(num <= length){
+                nums[num - 1] = -abs(nums[num - 1]);
+            }
+        }
+
+        for(int k = 0; k < length; ++k){
+            if(nums[k] > 0)
+                return k + 1;
+        }
+
+        return length + 1;
+    }
+};
