@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int current = 1;
+        int firstHeight = *(max_element(height.begin(), height.end()));
+        int length = height.size();
+        int result = 0;
+        while(current <= firstHeight){
+            for(int i = 0; i < length; ++i){
+                if(height[i] >= current){
+                    int j = i + 1;
+                    while(j < length && height[j] < current){
+                        ++j;
+                    }
+                    if(j < length && height[j] != 0)
+                        result += j - i - 1;
+                }
+            }
+            ++current;
+        }
+        return result;
+    }
+};
