@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int length = height.size();
+        if(length <= 2)
+            return 0;
+        int result = 0;
+        stack<int> stk;
+
+        for(int i = 0; i < length; ++i){
+            while(!stk.empty() && height[stk.top()] < height[i]){
+                int top = stk.top();
+                stk.pop();
+                if(stk.empty())
+                    break;
+                int second = stk.top();
+                result += (min(height[second], height[i]) - height[top]) * (i - second - 1);
+            }
+            stk.push(i);
+        }
+        return result;
+    }
+};
