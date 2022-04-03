@@ -1,0 +1,35 @@
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        if(s.size() == 0 && p.size() == 0)
+            return true;
+
+        return forceRecursion(s, p, 0, 0);
+        
+    }
+
+    bool forceRecursion(string s, string p, int i, int j){
+        if(j == p.size()){
+            if(i == s.size())
+                return true;
+            else
+                return false;
+        }
+        if(i == s.size()){
+            if(p[j] == '*')
+                return forceRecursion(s, p, i, j + 1);
+            else
+                return false;
+        }
+
+        if(p[j] == '*'){
+            return forceRecursion(s, p, i + 1, j) || forceRecursion(s, p, i, j + 1);
+        }
+
+        if(s[i] == p[j] || p[j] == '?'){
+            return forceRecursion(s, p, i + 1, j + 1);
+        }
+
+        return false;
+    }
+};
