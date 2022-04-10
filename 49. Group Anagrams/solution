@@ -1,0 +1,21 @@
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        unordered_map<string, int> hashMap;
+        vector<vector<string>> result;
+        int index = 0;
+        for (auto &str : strs) {
+            string tmp(str);
+            sort(tmp.begin(), tmp.end());
+            if (hashMap.find(tmp) == hashMap.end()) {
+                hashMap[tmp] = index;
+                result.push_back(vector<string>{str});
+                ++index;
+                continue;
+            }
+            result[hashMap[tmp]].push_back(str);
+        }
+        
+        return result;
+    }
+};
