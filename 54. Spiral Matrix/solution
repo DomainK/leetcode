@@ -1,0 +1,35 @@
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        vector<int> result;
+        calculateO(matrix, result, 0, 0, matrix.size() - 1, matrix[0].size() - 1);
+        return result;
+    }
+
+    void calculateO(vector<vector<int>>& matrix, vector<int>& result, int leftRow, int leftCol, int rightRow, int rightCol) {
+        if (leftRow == rightRow) {
+            for (int i = leftCol; i <= rightCol; ++i)
+                result.push_back(matrix[leftRow][i]);
+        }
+        else if (leftCol == rightCol) {
+            for (int i = leftRow; i <= rightRow; ++i)
+                result.push_back(matrix[i][leftCol]);
+        }
+        else if (leftRow < rightRow && leftCol < rightCol) {
+            for (int i = leftCol; i < rightCol; ++i) {
+                result.push_back(matrix[leftRow][i]);
+            }
+            for (int i = leftRow; i < rightRow; ++i) {
+                result.push_back(matrix[i][rightCol]);
+            }
+            for (int i = rightCol; i > leftCol; --i) {
+                result.push_back(matrix[rightRow][i]);
+            }
+            for (int i = rightRow; i > leftRow; --i) {
+                result.push_back(matrix[i][leftCol]);
+            }
+            calculateO(matrix, result, leftRow + 1, leftCol + 1, rightRow - 1, rightCol - 1);
+        }
+        return;
+    }
+};
