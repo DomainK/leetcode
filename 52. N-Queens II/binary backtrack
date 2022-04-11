@@ -1,0 +1,48 @@
+class Solution {
+public:
+    int totalNQueens(int n) {
+        if (n == 1)
+            return 1;
+        vector<int> validArray(n, 0);
+        vector<string> solution(n, string(n, '.'));
+
+        return backTrack(solution, validArray, 0);
+
+    }
+
+    bool isValid(vector<int>& validArrauy, int row, int col) {
+        return ((validArrauy[row] & (1 << col)) == 0) ? true : false;
+    }
+
+    void update(vector<int>& validArrauy, int row, int col) {
+        validArrauy[row] |= 1 << col;
+        for (int i = row + 1; i < validArrauy.size(); i++) {
+            validArrauy[i] |= 1 << col;
+            validArrauy[i] |= 1 << (col + i - row);
+            if (col - i + row >= 0)
+                validArrauy[i] |= 1 << (col - i + row);
+        }
+    }
+
+    int backTrack(vector<string>& solution, vector<int>& validArray, int row) {
+        int n = validArray.size();
+        int pre = 0;
+        if (row == n) {
+            pre++;
+            return pre;
+        }
+
+        for (int j = 0; j < n; ++j) {
+            if (isValid(validArray, row, n - j - 1)) {
+                vector<int> preValidArray(validArray);
+                solution[row][j] = 'Q';
+                update(validArray, row, n - j - 1);
+                pre += backTrack(solution, validArray, row + 1);
+                solution[row][j] = '.';
+                validArray = preValidArray;
+            }
+        }
+
+        return pre;
+    }
+};
