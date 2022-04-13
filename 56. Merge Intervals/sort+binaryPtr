@@ -1,0 +1,23 @@
+class Solution {
+public:
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        int length = intervals.size();
+        int ptr1 = 0;
+        int ptr2 = 1;
+        sort(intervals.begin(), intervals.end(), [](vector<int> x, vector<int> y) {return x[0] < y[0];});
+        vector<vector<int>> result(1, intervals[0]);
+
+        while (ptr2 < length) {
+            if (result[ptr1][1] >= intervals[ptr2][0]) {
+                result[ptr1][1] = max(result[ptr1][1], intervals[ptr2][1]);
+            }
+            else {
+                result.push_back(intervals[ptr2]);
+                ptr1++;
+            }
+            ptr2++;
+        }
+
+        return result;
+    }
+};
