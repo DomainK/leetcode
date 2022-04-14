@@ -1,0 +1,29 @@
+class Solution {
+public:
+    vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+        int left = newInterval[0];
+        int right = newInterval[1];
+        bool isplace = false;
+        vector<vector<int>> result;
+        for(const auto& interval : intervals){
+            if(interval[1] < left)
+                result.push_back(interval);
+            else if(interval[0] > right){
+                if(!isplace){
+                    result.push_back(vector<int>({left, right}));
+                    isplace = true;
+                }
+                result.push_back(interval);
+            }
+            else{
+                left = min(left, interval[0]);
+                right = max(right, interval[1]);
+            }
+        }
+
+        if(!isplace)
+            result.push_back(vector<int>({left, right}));
+        
+        return result;
+    }
+};
