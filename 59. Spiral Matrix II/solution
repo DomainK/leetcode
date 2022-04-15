@@ -1,0 +1,40 @@
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        vector<vector<int>> matrix(n, vector<int>(n, 0));
+        spiralMatrix(matrix, 0, 0, n - 1, n - 1, 1);
+
+        return matrix;
+    }
+
+    void spiralMatrix(vector<vector<int>>& matrix, int leftRow, int leftCol, int rightRow, int rightCol, int index) {
+        if (leftRow > rightRow || leftCol > rightCol)
+            return;
+
+        if (leftRow == rightRow) {
+            for (int i = leftCol; i <= rightCol; ++i) {
+                matrix[leftRow][i] = index++;
+            }
+        }
+        else if (leftCol == rightCol) {
+            for (int i = leftRow; i <= rightRow; ++i) {
+                matrix[i][leftCol] = index++;
+            }
+        }
+        else {
+            for (int i = leftCol; i < rightCol; ++i) {
+                matrix[leftRow][i] = index++;
+            }
+            for (int i = leftRow; i < rightRow; ++i) {
+                matrix[i][rightRow] = index++;
+            }
+            for (int i = rightCol; i > leftCol; --i) {
+                matrix[rightRow][i] = index++;
+            }
+            for (int i = rightRow; i > leftRow; --i) {
+                matrix[i][leftCol] = index++;
+            }
+        }
+        spiralMatrix(matrix, leftRow + 1, leftCol + 1, rightRow - 1, rightCol - 1, index);
+    }
+};
