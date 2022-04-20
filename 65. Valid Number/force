@@ -1,0 +1,47 @@
+'class Solution {
+public:
+    bool isNumber(string s) {
+        char top = ' ';
+        unordered_map<char, int> hashtable;
+
+        if(s.size() == 1 && (s[0] < '0' || s[0] > '9')){
+            return false;
+        }
+
+        for(char ch : s){
+            if(ch != 'E' && ch != 'e' && ch != '.' && ch != '-' && ch != '+' && (ch < '0' || ch > '9') )
+                return false;
+            else if(top == ' '){
+                if(ch != '.' && ch != '-' && ch != '+' && (ch < '0' || ch > '9'))
+                    return false;
+            }else if(hashtable.find('e') == hashtable.end() && hashtable.find('E') == hashtable.end()){
+                if(ch < '0' || ch > '9'){
+                    if(ch == '.' && hashtable.find(ch) != hashtable.end())
+                        return false;
+                    else if(ch == '-' || ch == '+'){
+                        return false;
+                    }else if((ch == 'e' || ch == 'E') && hashtable.find('0') == hashtable.end()){
+                        return false;
+                    }
+                }
+            }else if(hashtable.find('e') != hashtable.end() || hashtable.find('E') != hashtable.end()){
+                if(ch < '0' || ch > '9'){
+                    if(ch == '.' || ch == 'e' || ch == 'E')
+                        return false;
+                    else if((ch == '-' || ch == '+') && (top != 'e' && top != 'E')){
+                        return false;
+                    }
+                }
+            }
+            top = ch;
+            if(ch < '0' || ch > '9')
+                hashtable[ch] += 1;
+            else
+                hashtable['0'] += 1;
+        }
+        if((top != '.' || hashtable.find('0') == hashtable.end()) && (top < '0' || top > '9'))
+            return false;
+
+        return true;
+    }
+};
