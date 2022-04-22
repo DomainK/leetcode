@@ -1,0 +1,57 @@
+class Solution {
+public:
+    vector<string> fullJustify(vector<string>& words, int maxWidth) {
+        int curWidth = 0;
+        int length = words.size();
+        int curWord = 0;
+        vector<string> result;
+
+        while(curWord < length){
+            queue<string> que;
+            string str("");
+            while(curWord != length){
+                curWidth += words[curWord].size();
+                if(curWidth + que.size() > maxWidth){
+                    curWidth -= words[curWord].size();
+                    break;
+                }
+                que.push(words[curWord]);
+                curWord++;
+            }
+            cout<<curWord<<endl;
+            if(que.size() == 1 || curWord == length){
+                while(!que.empty()){
+                    if(que.size() == 1)
+                        str += que.front();
+                    else 
+                        str += que.front() + ' ';
+                    que.pop();
+                }
+                while(str.size() < maxWidth){
+                    str += ' ';
+                }
+            }
+            else
+            {
+                int num = (maxWidth - curWidth) / (que.size() - 1);
+                int res = (maxWidth - curWidth) % (que.size() - 1);
+                cout<<num<<' '<<res<<' '<< curWidth << endl;
+                while(!que.empty()){
+                    if(que.size() == 1)
+                        str += que.front();
+                    else 
+                        str += que.front() + string(num, ' ');
+                    que.pop();
+                    if(res > 0){
+                        str += ' ';
+                        res--;
+                    }
+                }
+            }
+            result.push_back(str);
+            curWidth = 0;
+        }
+
+        return result;
+    }
+};
