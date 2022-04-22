@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int mySqrt(int x) {
+        if (x == 0)
+            return 0;
+        return recursion(1, x, x);
+    }
+
+    int recursion(int left, int right, int x) {
+        int mid = left + (right - left) / 2;
+        if (left == mid)
+            return left;
+        if (mid > x / mid) {
+            return recursion(left, mid, x);
+        }
+        else if (mid < x / mid) {
+            return recursion(mid, right + 1, x);
+        }
+        else
+            return mid;
+
+        return 0;
+    }
+};
