@@ -1,0 +1,14 @@
+class Solution {
+public:
+    int climbStairs(int n) {
+        return recursion(n, 0);
+    }
+
+    int recursion(int n, int current) {
+        if (current == n)
+            return 1;
+        else if (current > n)
+            return 0;
+        return recursion(n, current + 1) + recursion(n, current + 2);
+    }
+};
