@@ -1,0 +1,32 @@
+class Solution {
+public:
+    int climbStairs(int n) {
+        if (n == 1) {
+            return 1;
+        }
+        vector<vector<int>> step{ {2},{1} };
+        vector<vector<int>> relation{ {1, 1}, {1, 0} };
+        vector<vector<int>> factor{ {1, 0}, {0, 1} };
+        int po = n - 2;
+        while (po > 0) {
+            if (po & 1) {
+                factor = matrixMultiple(factor, relation);
+            }
+            po >>= 1;
+            relation = matrixMultiple(relation, relation);
+        }
+        vector<vector<int>> result = matrixMultiple(factor, step);
+        return result[0][0];
+    }
+
+    vector<vector<int>> matrixMultiple(const vector<vector<int>> mtx1, const vector<vector<int>> mtx2) {
+        vector<vector<int>> result(mtx1.size(), vector<int>(mtx2[0].size(), 0));
+        for (int row = 0; row < result.size(); ++row) {
+            for (int col = 0; col < result[0].size(); ++col) {
+                for (int i = 0; i < mtx1.size(); ++i)
+                    result[row][col] += mtx1[row][i] * mtx2[i][col];
+            }
+        }
+        return result;
+    }
+};
