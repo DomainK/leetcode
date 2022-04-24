@@ -1,0 +1,106 @@
+class Solution {
+public:
+    enum States { path, current, previous, content };
+    enum Intype{ slash, dot, other };
+    string output;
+    unordered_map<States, unordered_map<Intype, States>> StateMap{
+        {
+            { path, {
+                {slash, path},
+                {other, content},
+                {dot, current},
+                }
+            },
+            { current, {
+                {slash, path},
+                {dot, previous},
+                {other, content},
+                }
+            },
+            { previous, {
+                {slash, path},
+                {dot, content},
+                {other, content},
+                }
+            },
+            { content, {
+                {other, content},
+                {slash, path},
+                {dot, content},
+                }
+            }
+        }
+    };
+
+    Intype IntypeCogntive(const char& ch) {
+        switch (ch)
+        {
+        case '/':
+            return Intype::slash;
+        case '.':
+            return Intype::dot;
+        }
+        return Intype::other;
+    }
+
+    bool stateChange(States& cur, const char ch) {
+        Intype chType = IntypeCogntive(ch);
+        States next = this->StateMap[cur][chType];
+        switch (cur)
+        {
+        case Solution::path:
+            if (next == content) {
+                this->output += ch;
+            }
+            break;
+        case Solution::current:
+            if (next == content) {
+                this->output += string(".") + ch;
+            }
+            break;
+        case Solution::previous:
+            if (next == content)
+                this->output += string("..") + ch;
+            break;
+        case Solution::content: 
+            if (next == path) {
+                cur = path;
+                return true;
+            }
+            this->output += ch;
+            break;
+        }
+        cur = next;
+        return false;
+    }
+
+    string simplifyPath(string paths) {
+        string result("");
+        States curState(path);
+
+
+        for (auto ch : paths) {
+            States prev(curState);
+            if (stateChange(curState, ch)) {               
+                result += '/' + this->output;
+                this->output = string("");
+            }
+            else if (curState == path && prev == previous) {
+                int i = result.length() - 1;
+                while (i > 0 && result[i] != '/')
+                    --i;
+                result = result.substr(0, i);
+            }
+        }
+        if (curState == content)
+            result += '/' + this->output;
+        else if (curState == previous) {
+            int i = result.length() - 1;
+            while (i > 0 && result[i] != '/')
+                --i;
+            result = result.substr(0, i);
+        }
+        
+        return result == ""? "/" : result;
+    }
+};
