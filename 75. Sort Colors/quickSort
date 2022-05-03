@@ -1,0 +1,35 @@
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        int right = nums.size();
+        if(right == 1)
+            return;
+
+        int left = -1;
+
+        while(left < right){
+            bool shift = false;
+            for(int i = left + 1; i < right; ++i){
+                if(nums[i] < 1){
+                    ++left;
+                    if(i != left){
+                        nums[i] = nums[i] ^ nums[left];
+                        nums[left] = nums[i] ^ nums[left];
+                        nums[i] = nums[i] ^ nums[left];
+                    }
+                    shift = true;
+                }else if(nums[i] > 1){
+                    --right;
+                    if(i != right){
+                        nums[i] = nums[i] ^ nums[right];
+                        nums[right] = nums[i] ^ nums[right];
+                        nums[i] = nums[i] ^ nums[right];
+                    }
+                    shift = true;
+                }
+            }
+            if(!shift)
+                break;
+        }
+    }
+};
