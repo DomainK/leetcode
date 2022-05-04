@@ -1,0 +1,41 @@
+class Solution {
+public:
+    unordered_map<char, int> alphaMap, countMap;
+
+    string minWindow(string s, string t) {
+        int left = 0;
+        int right = -1;
+        int leftResult = -1;
+        int maxWin = INT_MAX;
+
+        
+        for(auto& ch : t){
+            ++alphaMap[ch];
+        }
+
+        while(right < int(s.size())){
+            if(alphaMap.find(s[++right]) != alphaMap.end())
+                ++countMap[s[right]];
+            
+            while(check() && left <= right){
+                if(right - left + 1 < maxWin){
+                    maxWin = right - left + 1;
+                    leftResult = left;
+                }
+                if(alphaMap.find(s[left]) != alphaMap.end())
+                    --countMap[s[left]];
+                ++left;
+            }
+        }
+
+        return leftResult == -1 ? string() : s.substr(leftResult, maxWin);
+    }
+
+    bool check(){
+        for(const auto &alpha : alphaMap){
+            if(countMap[alpha.first] < alpha.second)
+                return false;
+        }
+        return true;
+    }
+};
