@@ -1,0 +1,20 @@
+class Solution {
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> result{{}};
+        vector<int> com;
+
+        recursion(result, com, nums, 0);
+
+        return result;
+    }
+
+    void recursion(vector<vector<int>>& result, vector<int>& com, vector<int>& nums, int cur){
+        for(int i = cur; i < nums.size(); i++){
+            com.push_back(nums[i]);
+            result.push_back(com);
+            recursion(result, com, nums, i + 1);
+            com.pop_back();
+        }
+    }
+};
