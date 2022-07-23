@@ -1,0 +1,23 @@
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        int stop = moveElements(nums, 0);
+        for(;stop<nums.size();stop++){
+            nums[stop] = 0;
+        }
+        return;
+    }
+
+    int moveElements(vector<int>& nums, int val){
+        int slow = 0;
+        int fast = 0;
+        while(fast<nums.size()){
+            if(nums[fast] != val){
+                nums[slow] = nums[fast];
+                slow++;
+            }
+            fast++;
+        }
+        return slow;
+    }
+};
