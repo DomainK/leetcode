@@ -1,0 +1,55 @@
+class Difference {
+public:
+    vector<int> differ;
+
+    Difference(vector<int>& nums) {
+        differ.resize(nums.size());
+        differ[0] = nums[0];
+
+        for (int i = 1; i < nums.size(); i++) {
+            differ[i] = nums[i] - nums[i - 1];
+        }
+        return;
+    }
+
+    void increment(int left, int right, int val);
+
+    vector<int> returnArray(); 
+};
+
+void Difference::increment(int left, int right, int val) {
+	differ[left] += val;
+	if (right + 1 < differ.size()) {
+		differ[right + 1] -= val;
+	}
+}
+
+vector<int> Difference::returnArray() {
+    vector<int> result;
+    result.resize(differ.size());
+
+    result[0] = differ[0];
+    for (int i = 1; i < differ.size(); i++) {
+        result[i] = result[i - 1] + differ[i];
+    }
+    return result;
+}
+
+
+class Solution {
+public:
+    bool carPooling(vector<vector<int>>& trips, int capacity) {
+        vector<int> kilometers(1001);
+        Difference differArray(kilometers);
+
+        for(vector<int> trip : trips){
+            differArray.increment(trip[1], trip[2] - 1, trip[0]);
+        }
+        vector<int> passengers(differArray.returnArray());
+
+        if(capacity < *max_element(passengers.begin(), passengers.end()))
+            return false;
+        
+        return true;
+    }
+};
