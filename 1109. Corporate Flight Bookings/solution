@@ -1,0 +1,49 @@
+class Difference {
+public:
+    vector<int> differ;
+
+    Difference(vector<int>& nums) {
+        differ.resize(nums.size());
+        differ[0] = nums[0];
+
+        for (int i = 1; i < nums.size(); i++) {
+            differ[i] = nums[i] - nums[i - 1];
+        }
+        return;
+    }
+
+    void increment(int left, int right, int val);
+
+    vector<int> returnArray(); 
+};
+
+void Difference::increment(int left, int right, int val) {
+	differ[left] += val;
+	if (right + 1 < differ.size()) {
+		differ[right + 1] -= val;
+	}
+}
+
+vector<int> Difference::returnArray() {
+    vector<int> result;
+    result.resize(differ.size());
+
+    result[0] = differ[0];
+    for (int i = 1; i < differ.size(); i++) {
+        result[i] = result[i - 1] + differ[i];
+    }
+    return result;
+}
+
+class Solution {
+public:
+    vector<int> corpFlightBookings(vector<vector<int>>& bookings, int n) {
+        vector<int> nums(n,0);
+        Difference differArray(nums);
+        
+        for(vector<int> booking : bookings){
+            differArray.increment(booking[0] - 1, booking[1] - 1, booking[2]);
+        }
+        return differArray.returnArray();
+    }
+};
