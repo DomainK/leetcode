@@ -1,0 +1,36 @@
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        vector<int> result;
+        int left = 0; int right = 0;
+        int valid = 0;
+        unordered_map<char, int> need, cur;
+
+        for (char ch : p)
+            need[ch]++;
+
+        while (right < s.size()) {
+            char tmp = s[right];
+            right++;
+
+            if (need.count(tmp)) {
+                cur[tmp]++;
+                if (cur[tmp] == need[tmp])
+                    valid++;
+            }
+
+            if (right - left == p.size()) {
+                if (valid == need.size()) 
+                    result.push_back(left);
+                tmp = s[left];
+                left++;
+                if (need.count(tmp)) {
+                    if (cur[tmp] == need[tmp])
+                        valid--;
+                    cur[tmp]--;     
+                }
+            }
+        }
+        return result;
+    }
+};
