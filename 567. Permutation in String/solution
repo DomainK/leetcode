@@ -1,0 +1,38 @@
+class Solution {
+public:
+    bool checkInclusion(string s1, string s2) {
+        int left = 0; int right = 0;
+        int valid = 0; 
+        unordered_map<char, int> hashTable, curTable;
+
+        for (char ch : s1)
+            hashTable[ch]++;
+
+        while (right < s2.size()) {
+            char tmp = s2[right];
+            right++;
+
+            if (hashTable.count(tmp)) {
+                curTable[tmp]++;
+                if (curTable[tmp] == hashTable[tmp])
+                    valid++;
+            }
+
+            while (valid == hashTable.size()) {
+                if (right - left == s1.size()) {
+                    return true;
+                }
+
+                tmp = s2[left];
+                left++;
+
+                if (hashTable.count(tmp)) {
+                    if (curTable[tmp] == hashTable[tmp])
+                        valid--;
+                    curTable[tmp]--;
+                }
+            }
+        }
+        return false;
+    }
+};
