@@ -1,0 +1,61 @@
+template<class T, class Compare=greater<T>>
+class MonotonicQueue {
+private:
+	deque<T> set;
+
+public:
+	//向队列尾中加入元素，
+	void push(T elem);
+
+	//队首弹出元素
+	void pop(T n);
+
+	//元素个数
+	int size();
+
+	//返回队首元素
+	T front();
+};
+
+template<class T, class Compare>
+void MonotonicQueue<T, Compare>::push(T elem) {
+	while (!set.empty() && set.back() < elem)
+		set.pop_back();
+	set.push_back(elem);
+}
+
+template<class T, class Compare>
+void MonotonicQueue<T, Compare>::pop(T n) {
+	if (set.front() == n)
+		set.pop_front();
+}
+
+template<class T, class Compare>
+int MonotonicQueue<T, Compare>::size() {
+	return set.size();
+}
+
+template<class T, class Compare>
+T MonotonicQueue<T, Compare>::front() {
+	return set.front();
+}
+
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        vector<int> result;
+        MonotonicQueue<int, greater<int>> mQue;
+        
+        for (int i = 0; i < nums.size(); i++) {
+            if (i < k - 1)
+                mQue.push(nums[i]);
+            else {
+                mQue.push(nums[i]);
+                result.push_back(mQue.front());
+                mQue.pop(nums[i - k + 1]);
+            }
+        }
+
+        return result;
+    }
+};
