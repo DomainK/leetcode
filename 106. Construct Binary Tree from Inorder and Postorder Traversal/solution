@@ -1,0 +1,29 @@
+class Solution {
+public:
+    unordered_map<int, int> valToIdx;
+
+    TreeNode* buildTree(vector<int>& inOrder, vector<int>& postOrder) {
+        for (int i = 0; i < inOrder.size(); i++) {
+            valToIdx[inOrder[i]] = i;
+        }
+
+        return build(inOrder, 0, inOrder.size() - 1, 
+            postOrder, 0, postOrder.size() - 1);
+    }
+    TreeNode* build(vector<int>& inOrder, int inLeft, int inRight,
+        vector<int>& postOrder, int postLeft, int postRight) {
+        if (inLeft > inRight)
+            return nullptr;
+
+        int rootVal = postOrder[postRight];
+        int idx = valToIdx[rootVal];
+        int leftsize = idx - inLeft;
+        TreeNode* root = new TreeNode(rootVal);
+        root->left = build(inOrder, inLeft, idx - 1,
+            postOrder, postLeft, postLeft + leftsize - 1);
+        root->right = build(inOrder, idx + 1, inRight,
+            postOrder, postLeft + leftsize, postRight - 1);
+
+        return root;
+    }
+};
