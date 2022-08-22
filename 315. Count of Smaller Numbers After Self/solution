@@ -1,0 +1,47 @@
+class Solution {
+public:
+    vector<pair<int, int>> tmp;
+    vector<int> count;
+
+    vector<int> countSmaller(vector<int>& nums) {
+        int n = nums.size();
+        tmp.resize(n);
+        count.resize(n, 0);
+        vector<pair<int, int>> arr;
+        for (int i = 0; i < n; i++) {
+            arr.push_back(pair<int, int>{nums[i], i});
+        }
+        MergeSort(arr, 0, n - 1);
+        return count;
+    }
+
+    void MergeSort(vector<pair<int, int>>& nums, int left, int right) {
+        if (left == right)
+            return;
+        int mid = left + (right - left) / 2;
+        MergeSort(nums, left, mid);
+        MergeSort(nums, mid + 1, right);
+        merge(nums, left, mid, right);
+    }
+
+    void merge(vector<pair<int, int>>& nums, int left, int mid, int right) {
+        for (int i = left; i <= right; i++)
+            tmp[i] = nums[i];
+        int ptr1 = left, ptr2 = mid + 1;
+        for (int p = ptr1; p <= right; p++) {
+            if (ptr1 == mid + 1) {
+                nums[p] = tmp[ptr2++];
+            }
+            else if (ptr2 == right + 1) {
+                nums[p] = tmp[ptr1++];
+                count[nums[p].second] += ptr2 - mid - 1;
+            }
+            else if (tmp[ptr1].first > tmp[ptr2].first)
+                nums[p] = tmp[ptr2++];
+            else {
+                nums[p] = tmp[ptr1++];
+                count[nums[p].second] += ptr2 - mid - 1;
+            }
+        }
+    }
+};
