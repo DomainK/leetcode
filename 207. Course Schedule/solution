@@ -1,0 +1,42 @@
+class Solution {
+private:
+    vector<bool> visited;
+    vector<bool> onPath;
+    bool hasCycle = false;
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        visited.resize(numCourses);
+        onPath.resize(numCourses);
+
+        vector<list<int>> graph = buildGraph(numCourses, prerequisites);
+
+        for (int i = 0; i < numCourses; i++)
+            traverse(graph, i);
+
+        return !hasCycle;
+    }
+
+    vector<list<int>> buildGraph(int numCourses, vector<vector<int>>& prerequisites) {
+        vector<list<int>> graph(numCourses);
+        for (vector<int> edge : prerequisites) {
+            graph[edge[0]].push_back(edge[1]);
+        }
+
+        return graph;
+    }
+
+    void traverse(vector<list<int>>& graph, int cur) {
+        if (onPath[cur]) {
+            hasCycle = true;
+        }
+
+        if (visited[cur] || hasCycle)
+            return;
+        
+        visited[cur] = true;
+        onPath[cur] = true;
+        for (int next : graph[cur])
+            traverse(graph, next);
+        onPath[cur] = false;
+    }
+};
