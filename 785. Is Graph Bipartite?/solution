@@ -1,0 +1,36 @@
+class Solution {
+public:
+    bool isValid;
+    vector<bool> isVisited;
+    vector<bool> color;
+
+    bool isBipartite(vector<vector<int>>& graph) {
+        isValid = true;
+        isVisited.resize(graph.size(), false);
+        color.resize(graph.size());
+
+        for (int cur = 0; cur < graph.size(); cur++) {
+            if (!isVisited[cur]) {
+                traverse(graph, cur);
+            }
+        }
+
+        return isValid;
+    }
+
+    void traverse(vector<vector<int>>& graph, int cur) {
+        if (!isValid)
+            return;
+        isVisited[cur] = true;
+        for (int next : graph[cur]) {
+            if (isVisited[next] == false) {
+                color[next] = !color[cur];
+                traverse(graph, next);
+            }
+            else {
+                if (color[next] == color[cur])
+                    isValid = false;
+            }
+        }
+    }
+};
