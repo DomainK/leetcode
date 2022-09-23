@@ -1,0 +1,53 @@
+class Solution {
+public:
+    bool isValid;
+    vector<bool> isVisited;
+    vector<bool> color;
+
+    bool possibleBipartition(int n, vector<vector<int>>& dislikes) {
+        isValid = true;
+        vector<list<int>> graph = buildGraph(n, dislikes);
+        isVisited.resize(n + 1, false);
+        color.resize(n + 1);
+
+        for (int cur = 1; cur < n + 1; cur++) {
+            if (!isVisited[cur]) {
+                traverse(graph, cur);
+            }
+        }
+
+        return isValid;
+    }
+
+    vector<list<int>> buildGraph(int n, vector<vector<int>>& dislikes) {
+        vector<list<int>> graph(n + 1);
+
+        for (vector<int> edge : dislikes) {
+            graph[edge[0]].push_back(edge[1]);
+            graph[edge[1]].push_back(edge[0]);
+        }
+        return graph;
+    }
+
+    void traverse(vector<list<int>>& graph, int cur) {
+        isVisited[cur] = true;
+        queue<int> que;
+        que.push(cur);
+
+        while (!que.empty() && isValid) {
+            int q = que.front();
+            que.pop();
+            for (int next : graph[q]) {
+                if (!isVisited[next]) {
+                    color[next] = !color[q];
+                    isVisited[next] = true;
+                    que.push(next);
+                }
+                else {
+                    if (color[next] == color[q])
+                        isValid = false;
+                }
+            }
+        }
+    }
+};
