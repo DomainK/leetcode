@@ -1,0 +1,70 @@
+class UnionFind {
+private:
+	// 连通分量个数
+	int count;
+	// 节点x的父节点为parent[x]
+	vector<int> parent;
+
+public:
+	// 构造函数
+	UnionFind(int n) {
+		this->count = n;
+		this->parent.resize(n);
+
+		for (int i = 0; i < n; i++) {
+			parent[i] = i;
+		}
+	}
+
+	// 连通两个节点
+	void unionTwo(int x1, int x2) {
+		int root1 = find(x1);
+		int root2 = find(x2);
+		if (root1 == root2)
+			return;
+		parent[root2] = root1;
+		count--;
+	}
+	// 判断是否连通
+	bool connected(int x1, int x2) {
+		int root1 = find(x1);
+		int root2 = find(x2);
+		return root1 == root2;
+	}
+
+	// 返回根节点
+	int find(int x) {
+		if (parent[x] != x)
+			parent[x] = find(parent[x]);
+		return parent[x];
+	}
+
+	// 返回当前的连接分量个数
+	int size(){
+		return count;
+	}
+};
+
+class Solution {
+public:
+    bool equationsPossible(vector<string>& equations) {
+        UnionFind uf(26);
+        for (string& str : equations) {
+            if (str[1] == '=') {
+                char x = str[0];
+                char y = str[3];
+                uf.unionTwo(x - 'a', y - 'a');
+            }
+        }
+        for (string& str : equations) {
+            if (str[1] == '!') {
+                char x = str[0];
+                char y = str[3];
+                if (uf.connected(x - 'a', y - 'a')) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+};
