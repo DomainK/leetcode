@@ -1,0 +1,63 @@
+struct cmp {
+    bool operator()(const vector<int> x, const vector<int> y) {
+        return x[2] > y[2];
+    }
+};
+
+class Solution {
+public:
+    priority_queue<vector<int>, vector<vector<int>>, cmp> priQue;
+    vector<vector<int>> graph;
+    vector<bool> visited;
+    int mst;
+    
+    int minCostConnectPoints(vector<vector<int>>& points) {
+        int n = points.size();
+        visited.resize(n);
+        graph = buildGraph(points);
+        mst = 0;
+
+        cut(0);
+        visited[0] = true;
+        while (!priQue.empty()) {
+            vector<int> cur = priQue.top();
+            priQue.pop();
+            if (visited[cur[1]] == true) {
+                continue;
+            }
+            mst += cur[2];
+            visited[cur[1]] = true;
+            cut(cur[1]);
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (visited[i] == false)
+                return -1;
+        }
+        return mst;
+    }
+
+    vector<vector<int>> buildGraph(vector<vector<int>>& points) {
+        int n = points.size();
+        vector<vector<int>> edges;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                edges.push_back(vector<int>{i, j,
+                    abs(points[i][0] - points[j][0]) +
+                    abs(points[i][1] - points[j][1])});
+            }
+        }
+
+        return edges;
+    }
+
+    void cut(int point) {
+        for (vector<int> p : graph) {
+            if (p[0] == point) {
+                if (visited[p[1]] == false) {
+                    priQue.push(p);
+                }
+            }
+        }
+    }
+};
