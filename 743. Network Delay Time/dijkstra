@@ -1,0 +1,56 @@
+class State {
+public:
+    int id;
+    int distFromStart;
+
+    State(const int i, const int d) :id(i), distFromStart(d) {};
+};
+
+struct cmp {
+    bool operator()(const State& x1, const State& x2) {
+        return x1.distFromStart < x2.distFromStart;
+    }
+};
+
+class Solution {
+public:
+    int networkDelayTime(vector<vector<int>>& times, int n, int k) {
+        vector<list<vector<int>>> graph(n + 1);
+        for (vector<int> time : times) {
+            graph[time[0]].push_back(vector<int>{time[1], time[2]});
+        }
+
+        vector<int> minDist = djikstra(graph, k);
+        minDist[0] = -1;
+        auto result = max_element(minDist.begin(), minDist.end());
+        return *result == INT_MAX ? -1 : *result;
+    }
+
+    vector<int> djikstra(vector<list<vector<int>>>& graph, int start) {
+        int n = graph.size();
+        vector<int> minDist(n, INT_MAX);
+        minDist[start] = 0;
+        priority_queue<State, vector<State>, cmp> priQue;
+        priQue.push(State(start, 0));
+        while (!priQue.empty()) {
+            State curState = priQue.top();
+            priQue.pop();
+            int curId = curState.id;
+            int curDist = curState.distFromStart;
+
+            if (curDist > minDist[curId])
+                continue;
+
+            for (auto i = graph[curId].begin(); i != graph[curId].end(); i++) {
+                int nextId = (*i)[0];
+                int nextDist = minDist[curId] + (*i)[1]; 
+                if (nextDist < minDist[nextId]) {
+                    minDist[nextId] = nextDist;
+                    priQue.push(State(nextId, nextDist));
+                }
+            }
+        }
+
+        return minDist;
+    }
+};
