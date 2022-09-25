@@ -1,0 +1,56 @@
+class State {
+public:
+    int id;
+    double distFromStart;
+
+    State(const int _id, const double d) :id(_id), distFromStart(d) {};
+};
+
+struct cmp {
+    bool operator()(const State& x1, const State& x2) {
+        return x1.distFromStart < x2.distFromStart;
+    }
+};
+
+class Solution {
+public:
+    double maxProbability(int n, vector<vector<int>>& edges, vector<double>& succProb, int start, int end) {
+        vector<double> maxPro(n, -1);
+        maxPro[start] = 1.0;
+        priority_queue<State, vector<State>, cmp> priQue;
+        priQue.push(State(start, 1.0));
+        while (!priQue.empty()) {
+            State curState = priQue.top();
+            priQue.pop();
+            int curId = curState.id;
+            double curProb = curState.distFromStart;
+            
+            if (curId == end)
+                return curProb;
+
+            if (curProb < maxPro[curId])
+                continue;
+
+            for (int i = 0; i < edges.size(); i++) {
+                if (edges[i][0] == curId) {
+                    int nextId = edges[i][1];
+                    double nextProb = curProb * succProb[i];
+                    if (nextProb > maxPro[nextId]) {
+                        maxPro[nextId] = nextProb;
+                        priQue.push(State(nextId, nextProb));
+                    }
+                }
+                else if (edges[i][1] == curId) {
+                    int nextId = edges[i][0];
+                    double nextProb = curProb * succProb[i];
+                    if (nextProb > maxPro[nextId]) {
+                        maxPro[nextId] = nextProb;
+                        priQue.push(State(nextId, nextProb));
+                    }
+                }
+            }
+        }
+
+        return 0.0;
+    }
+};
