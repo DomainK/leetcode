@@ -1,0 +1,67 @@
+class Solution {
+public:
+    int openLock(vector<string>& deadends, string target) {
+        if (target == "0000")
+            return 0;
+        if (find(deadends.begin(), deadends.end(), "0000") != deadends.end())
+            return -1;
+
+        return bfs(deadends, target);
+    }
+
+    string turnUp(string& current, int idx) {
+        string str(current);
+        if (str[idx] == '9')
+            str[idx] = '0';
+        else
+            str[idx] += 1;
+        return str;
+    }
+
+    string turnDown(string& current, int idx) {
+        string str(current);
+        if (str[idx] == '0')
+            str[idx] = '9';
+        else
+            str[idx] -= 1;
+        return str;
+    }
+
+    int bfs(vector<string>& deadends, string target) {
+        string current{ "0000" };
+        unordered_set<string> visited;
+        queue<string> que;
+
+        visited.insert(current);
+        for (string deadend : deadends)
+            visited.insert(deadend);
+
+        que.push(current);
+        int step = 1;
+        while (!que.empty()) {
+            int sz = que.size();
+            for (int i = 0; i < sz; i++) {
+                string current(que.front());
+                que.pop();
+                for (int j = 0; j < 4; j++) {
+                    string nextUp(turnUp(current, j));
+                    string nextDown(turnDown(current, j));
+
+                    if (nextUp == target || nextDown == target)
+                        return step;
+
+                    if (visited.find(nextUp) == visited.end()) {
+                        que.push(nextUp);
+                        visited.insert(nextUp);
+                    }
+                    if (visited.find(nextDown) == visited.end()) {
+                        que.push(nextDown);
+                        visited.insert(nextDown);
+                    }
+                }
+            }
+            step++;
+        }
+        return -1;
+    }
+};
