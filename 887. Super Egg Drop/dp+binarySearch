@@ -1,0 +1,38 @@
+class Solution {
+public:
+    unordered_map<int, int> memo;
+    int dp(int k, int n){
+        if(memo.find(n * 100 + k) != memo.end())
+            return memo[n * 100 + k];
+        else{
+            int ans;
+            if(n == 0)
+                ans = 0;
+            else if(k == 1)
+                ans = n;
+            else{
+                int left = 1; int right = n;
+                while(left + 1 < right){
+                    int mid = (left + right) / 2;
+                    int x1 = dp(k - 1, mid - 1);
+                    int x2 = dp(k, n - mid);
+                    if(x1 < x2)
+                        left = mid;
+                    else if(x1 > x2)
+                        right = mid;
+                    else 
+                        left = right = mid;
+                }
+                ans = 1 + min(max(dp(k - 1, left - 1), dp(k, n - left)),
+                 max(dp(k - 1, right - 1), dp(k, n - right)));
+            }
+            memo[n * 100 + k] = ans;
+        }
+
+        return memo[n * 100 + k];
+    }
+
+    int superEggDrop(int k, int n) {
+        return dp(k, n);
+    }
+};
