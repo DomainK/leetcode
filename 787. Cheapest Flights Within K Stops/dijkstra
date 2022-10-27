@@ -1,0 +1,63 @@
+class State{
+public:
+    int id;
+    int costFromSrc;
+    int NumFromSrc;
+
+    State(int i, int c, int n):id(i), costFromSrc(c), NumFromSrc(n){};
+};
+
+class Solution {
+public:
+    unordered_map<int, list<vector<int>>> graph;
+    int num;
+
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+        k++;
+        num = n;
+
+        for(int i = 0; i < flights.size(); i++){
+            int from = flights[i][0];
+            int to = flights[i][1];
+            int cost = flights[i][2];
+            graph[from].push_back(vector<int>{to, cost});
+        }
+
+        return dijkstra(src, dst, k);
+    }
+
+    int dijkstra(int src, int dst, int k){
+        vector<int> minDst(num, INT_MAX);
+        vector<int> nodeNum(num, INT_MAX);
+        
+        auto cmp = [](State& a, State& b){return a.costFromSrc > b.costFromSrc;};
+        priority_queue<State, vector<State>, decltype(cmp)> pq(cmp);
+        pq.push(State(src, 0, 0));
+
+        while(!pq.empty()){
+            State curNode(pq.top());
+            pq.pop();
+            if(curNode.id == dst)
+                return curNode.costFromSrc;
+            if(curNode.NumFromSrc == k)
+                continue;
+            for(vector<int> next : graph[curNode.id]){
+                int nextId = next[0];
+                int nextNumFromSrc = curNode.NumFromSrc + 1;
+                int nextCost = curNode.costFromSrc + next[1];
+
+                if(minDst[nextId] > nextCost){
+                    minDst[nextId] = nextCost;
+                    nodeNum[nextId] = nextNumFromSrc;
+                }
+
+                if(nextCost > minDst[nextId] && nextNumFromSrc > nodeNum[nextId])
+                    continue;
+
+                pq.push(State(nextId, nextCost, nextNumFromSrc));
+            }
+        }
+
+        return minDst[dst] == INT_MAX ? -1 : minDst[dst];
+    }
+};
