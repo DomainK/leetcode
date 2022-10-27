@@ -1,0 +1,41 @@
+class Solution {
+public:
+    unordered_map<int, list<vector<int>>> inDegree;
+    vector<vector<int>> memo;
+
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+        k++;
+        memo.resize(n, vector<int>(k + 1, -2));
+        
+        for(int i = 0; i < flights.size(); i++){
+            int from = flights[i][0];
+            int in = flights[i][1];
+            int cost = flights[i][2];
+
+            inDegree[in].push_back(vector<int>{from, cost});
+        }
+
+        return dp(dst, k, src);
+    }
+
+    int dp(int curDst, int k, int src){
+        if(curDst == src)
+            return 0;
+        if(k == 0)
+            return -1;
+        if(memo[curDst][k] != -2)
+            return memo[curDst][k];
+
+        int result = INT_MAX;
+        if(inDegree.find(curDst) != inDegree.end()){
+            for(vector<int> path : inDegree[curDst]){
+                int nextPath = dp(path[0], k - 1, src);
+                if(nextPath != -1)
+                    result = min(result, nextPath + path[1]);
+            }
+        }
+
+        memo[curDst][k] = result == INT_MAX ? -1 : result;
+        return memo[curDst][k];
+    }
+};
