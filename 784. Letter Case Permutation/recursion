@@ -1,0 +1,38 @@
+class Solution {
+public:
+    unordered_set<string> memo;
+    vector<string> result;
+    int distan;
+
+    vector<string> letterCasePermutation(string s) {
+        distan = 'A' - 'a';
+        result.emplace_back(s);
+        memo.insert(s);
+        recrusion(s, 0);
+
+        return result;
+    }
+
+    void recrusion(string s, int idx){
+        if(idx == s.size()){
+            return;
+        }
+    
+        if(isdigit(s[idx])){
+            recrusion(s, idx + 1);
+            return;
+        }
+
+        recrusion(s, idx + 1);
+
+        if(s[idx] >= 'a' && s[idx] <= 'z'){
+            s[idx] += distan;
+        }else
+            s[idx] -= distan;
+        recrusion(s, idx + 1);
+
+        if(memo.find(s) == memo.end()){
+            result.emplace_back(s);
+        }
+    }
+};
