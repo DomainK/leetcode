@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int magicalString(int n) {
+        if(n <= 2)
+            return 1;
+
+        string s("1");
+        int cur = 0;
+        int refer = 0;
+        int result = 0;
+        while(s.size() < n){
+            if(s[refer] == '1'){
+                s += (s[cur] == '2'? "1" : "2");
+            }
+            else{
+                int prev = cur - 1;
+                if(refer == cur){
+                    s += (s[prev] == '1' ? "2" : "11");                    
+                }
+                else{
+                    s += (s[cur] == '2'? "11" : "22");
+                }
+            }
+            refer++;
+            cur = s.size() - 1; 
+        }
+
+        for(int i = 0; i < n; i++){
+            if(s[i] == '1')
+                result++;
+        }
+
+        return result;
+    }
+};
