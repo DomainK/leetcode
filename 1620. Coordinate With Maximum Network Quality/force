@@ -1,0 +1,34 @@
+class Solution {
+public:
+    vector<int> bestCoordinate(vector<vector<int>>& towers, int radius) {
+        int xb = INT_MIN, yb = INT_MIN;
+        for(auto&& tower : towers){
+            int x1 = tower[0];
+            int y1 = tower[1];
+            xb = x1 > xb ? x1 : xb;
+            yb = y1 > yb ? y1 : yb;
+        }
+
+        int maxSignal = INT_MIN;
+        int c1, c2;
+        for(int i = 0; i <= xb; i++){
+            for(int j = 0; j <= yb; j++){
+                int curSignal = 0;
+                for(auto&& tower : towers){
+                    double dist = sqrt(pow(tower[0] - i, 2) + pow(tower[1] - j, 2));
+                    if(dist <= radius){
+                        curSignal += floor((double)tower[2] / (1 + dist));
+                    }
+                }
+
+                if(curSignal > maxSignal){
+                    c1 = i;
+                    c2 = j;
+                    maxSignal = curSignal;
+                }
+            }
+        }
+
+        return vector<int>{c1, c2};
+    }
+};
