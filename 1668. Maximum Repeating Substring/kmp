@@ -1,0 +1,47 @@
+class Solution {
+public:
+    int maxRepeating(string sequence, string word) {
+        if(sequence.size() < word.size())
+            return 0;
+
+        int j = -1;
+        int n = sequence.size();
+        vector<int> next(getNext(word));
+        vector<int> result(n);
+
+        for(int i = 0; i < n; i++){
+            while(j >= 0 && word[j + 1] != sequence[i]){
+                j = next[j];
+            }
+            if(word[j + 1] == sequence[i]){
+                j++;
+                int m = word.size();
+                if(j == m - 1){
+                    result[i] = (i >= m ? result[i - m] : 0) + 1;
+                    j = next[j];
+                }
+            }
+        }
+
+        return *max_element(result.begin(), result.end());
+    }
+
+    vector<int> getNext(string word){
+        int n = word.size();
+        vector<int> nxt(n);
+        int j = -1;
+        nxt[0] = j;
+
+        for(int i = 1; i < n; i++){
+            while(j >= 0 && word[i] != word[j + 1]){
+                j = nxt[j];
+            }
+            if(word[i] == word[j + 1]){
+                j++;
+            }
+            nxt[i] = j;
+        }
+
+        return nxt;
+    }
+};
