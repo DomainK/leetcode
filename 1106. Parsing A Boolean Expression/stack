@@ -1,0 +1,47 @@
+class Solution {
+public:
+    bool parseBoolExpr(string expression) {
+        stack<char> result;
+        stack<char> sys;
+
+        for(char expre : expression){
+            if(expre == 't' || expre == 'f' || expre == '(')
+                result.push(expre);
+            else if(expre == ')')
+                compute(result, sys);
+            else if(expre == ',')
+                continue;
+            else
+                sys.push(expre);
+        }
+
+        return result.top() == 'f' ? false : true;
+    }
+
+    void compute(stack<char>& result, stack<char>& sys){
+        char logic = sys.top();
+        sys.pop();
+        bool right = (result.top() == 'f' ? false : true);
+        result.pop();
+
+        if (logic == '!') {
+            if (!result.empty() && result.top() == '(')
+                result.pop();
+            result.push((right == false ? 't' : 'f'));
+            return;
+        }
+
+        while(!result.empty() && result.top() != '('){
+            bool left = (result.top() == 'f' ? false : true);
+            result.pop();
+            if(logic == '&')
+                right = right && left;
+            else
+                right = right || left;
+        }
+        if(!result.empty() && result.top() == '(')
+            result.pop();
+        
+        result.push((right == false ? 'f' : 't'));
+    }
+};
