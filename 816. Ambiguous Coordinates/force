@@ -1,0 +1,41 @@
+class Solution {
+public:
+    vector<string> ambiguousCoordinates(string s) {
+        vector<string> result;
+        s = s.substr(1, s.size() - 2);
+        int n = s.size();
+        for(int i = 1; i < n; i++){
+            string s1 = s.substr(0, i);
+            string s2 = s.substr(i);
+
+            vector<string> pos1 = findPos(s1);
+            if(pos1.empty())
+                continue;
+
+            vector<string> pos2 = findPos(s2);
+            if(pos2.empty())
+                continue;
+            
+            for(string& p1 : pos1){
+                for(string& p2 : pos2){
+                    result.push_back("(" + p1 + ", " + p2 + ")");
+                }
+            }
+        }
+        return result;
+    }
+
+    vector<string> findPos(string s){
+        vector<string> pos;
+        int n = s.size();
+        if(s == "0" || s[0] != '0'){
+            pos.push_back(s);
+        }
+        for(int i = 1; i < n; i++){
+            if((i != 1 && s[0] == '0') || s.back() == '0')
+                continue;
+            pos.push_back(s.substr(0, i) + "." + s.substr(i));
+        }
+        return pos;
+    }
+};
