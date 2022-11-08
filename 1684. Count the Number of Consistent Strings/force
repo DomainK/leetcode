@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int countConsistentStrings(string allowed, vector<string>& words) {
+        unordered_set<char> allowedAlpha;
+        int result = 0;
+        
+        for(auto& al : allowed){
+            allowedAlpha.insert(al);
+        }
+
+        for(string& word: words){
+            int n = word.size();
+            int cur = 0;
+            while(cur < n && allowedAlpha.find(word[cur]) != allowedAlpha.end()){
+                cur++;
+            }
+            if(cur == n)
+                result++;
+        }
+
+        return result;
+    }
+};
