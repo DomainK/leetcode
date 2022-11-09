@@ -1,0 +1,55 @@
+class Solution {
+public:
+    int orderOfLargestPlusSign(int n, vector<vector<int>>& mines) {
+        vector<vector<int>> dp(n, vector<int>(n, n));
+        int result = 0;
+
+        unordered_set<int> zero;
+        for(auto& mine : mines){
+            zero.emplace(mine[0] * n + mine[1]);
+        }
+
+        for(int i = 0; i < n; i++){
+            int cur = 0;
+            for(int j = 0; j < n; j++){
+                if(zero.count(i * n + j))
+                    cur = 0;
+                else
+                    cur++;
+                dp[i][j] = min(cur, dp[i][j]);
+            }
+
+            cur = 0;
+            for(int j = n - 1; j >= 0; j--){
+                if(zero.count(i * n + j))
+                    cur = 0;
+                else
+                    cur++;
+                dp[i][j] = min(cur, dp[i][j]);
+            }
+        }
+
+        for(int j = 0; j < n; j++){
+            int cur = 0;
+            for(int i = 0; i < n; i++){
+                if(zero.count(i * n + j))
+                    cur = 0;
+                else
+                    cur++;
+                dp[i][j] = min(cur, dp[i][j]);
+            }
+            
+            cur = 0;
+            for(int i = n - 1; i >= 0; i--){
+                if(zero.count(i * n + j))
+                    cur = 0;
+                else
+                    cur++;
+                dp[i][j] = min(cur, dp[i][j]);
+                result = max(dp[i][j], result);
+            }
+        }
+
+        return result;
+    }
+};
