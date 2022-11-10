@@ -1,0 +1,81 @@
+class State {
+public:
+    int row;
+    int col;
+    int keys;
+
+    State(int r, int c) : row(r), col(c) {
+        keys = 0;
+    };
+    State(int r, int c, int k) : row(r), col(c), keys(k) {};
+};
+
+class Solution {
+public:
+
+    vector<vector<int>> dircs{ { -1, 0}, {1, 0},{0,-1},{0,1} };
+    unordered_map<int, list<int>> memo;
+
+    int shortestPathAllKeys(vector<string>& grid) {
+        int row = grid.size();
+        int col = grid[0].size();
+        queue<State> que;
+
+        int target = 0;
+        for (int i = 0; i < row; i++)
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] == '@') {
+                    que.emplace(State(i, j));
+                }
+                if (grid[i][j] >= 'A' && grid[i][j] <= 'F')
+                    target |= 1 << grid[i][j] - 'A';
+            }
+
+        int step = 0;
+
+        while (!que.empty()) {
+            int n = que.size();
+            for (int i = 0; i < n; i++) {                 
+                State cur = que.front();
+                que.pop();
+
+                int idx = cur.row * col + cur.col;
+                if (memo.find(idx) != memo.end()
+                    && find(memo[idx].begin(), memo[idx].end(), cur.keys) != memo[idx].end())
+                    continue;
+                memo[idx].push_back(cur.keys);
+
+                if (cur.keys == target)
+                    return step;
+
+                for (vector<int>& dir : dircs) {
+                    int nextRow = cur.row + dir[0];
+                    int nextCol = cur.col + dir[1];
+                    int nextKeys = cur.keys;
+                    if (!isValid(nextRow, nextCol, grid) || grid[nextRow][nextCol] == '#') {
+                        continue;
+                    }
+                    if (grid[nextRow][nextCol] <= 'F' && grid[nextRow][nextCol] >= 'A'
+                        && (cur.keys & (1 << grid[nextRow][nextCol] - 'A')) == 0) {
+                        continue;
+                    }
+                    if (grid[nextRow][nextCol] <= 'f' && grid[nextRow][nextCol] >= 'a') {
+                        nextKeys |= 1 << grid[nextRow][nextCol] - 'a';
+                    }
+                    que.emplace(State(nextRow, nextCol, nextKeys));
+                }
+            }
+            step++;
+        }
+
+        return -1;
+    }
+
+    bool isValid(int row, int col, vector<string>& grid) {
+        int r = grid.size();
+        int c = grid[0].size();
+        if (row >= 0 && row < r && col >= 0 && col < c)
+            return true;
+        return false;
+    }
+};
