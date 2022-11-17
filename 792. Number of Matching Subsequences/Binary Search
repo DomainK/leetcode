@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int numMatchingSubseq(string s, vector<string>& words) {
+        int result = words.size();
+        vector<vector<int>> alpha(26);
+        for(int i = 0; i < s.size(); i++){
+            alpha[s[i] - 'a'].push_back(i);
+        }
+        
+        for(string& word : words){
+            if(word.size() > s.size()){
+                result--;
+                continue;
+            }
+
+            int p = -1;
+            for(char c : word){
+                auto& next = alpha[c - 'a'];
+                auto it = upper_bound(next.begin(), next.end(), p);
+                if(it == next.end()){
+                    result--;
+                    break;
+                }
+                p = *it;
+            }
+
+        }
+
+        return result;
+    }
+};
