@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int sumSubseqWidths(vector<int>& nums) {
+        int n = nums.size();
+        sort(nums.begin(), nums.end());
+
+        long long result = 0, mod = 1e9 + 7;
+        vector<long long> twoPow(n, 1);
+        for (int i = 1; i < n; i++) {
+            twoPow[i] = 2 * twoPow[i - 1] % mod;
+        }
+        
+        for (int i = 0; i < n; i++) {
+            result = (result + twoPow[i] * nums[i] - twoPow[n - i - 1] * nums[i]) % mod;
+        }
+
+        return result % mod;
+    }
+};
