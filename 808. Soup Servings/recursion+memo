@@ -1,0 +1,29 @@
+class Solution {
+public:
+    vector<vector<double>> memo;
+    double soupServings(int n) {
+        n = ceil((double) n / 25);
+        if(n >= 179)
+            return 1.0;
+        int a = n;
+        int b = n;
+        memo.resize(n + 1, vector<double>(n + 1));
+
+        return recursion(a, b, 1.0);
+    }
+
+    double recursion(int a, int b, double pro){
+        if(a <= 0){
+            return b <= 0 ? pro / 2.0 : pro;
+        }
+        if(b <= 0)
+            return 0.0;
+
+        if(memo[a][b] > 0)
+            return memo[a][b];
+        memo[a][b] += recursion(a - 4, b, pro / 4.0) + recursion(a - 3, b - 1, pro / 4.0)
+            + recursion(a - 2, b - 2, pro / 4.0) + recursion(a - 1, b - 3, pro / 4.0);
+        
+        return memo[a][b];
+    }
+};
