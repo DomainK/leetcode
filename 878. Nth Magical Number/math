@@ -1,0 +1,45 @@
+class Solution {
+public:
+    int nthMagicalNumber(int n, int a, int b) {
+        long long MOD = 1e9 + 7;
+        if (a == b)
+            return (long long)n * a % MOD;
+
+        long long g = findmcm(a, b);
+        long long num = g / a + g / b - 1;
+        long long res = n % num;
+        n = n / num;
+
+        if (res == 0)
+            return n * g % MOD;
+
+        bool isA = (a <= b) ? true : false;
+        long long a2 = 0, b2 = 0;
+        while(res > 0) {
+            if (a2 + a <= b2 + b) {
+                a2 += a;
+                isA = true;
+            }
+            else {
+                b2 += b;
+                isA = false;
+            }
+            res--;
+        }
+
+        return (n * g + (isA ? a2 : b2)) % MOD;
+    }
+
+    long long findmcm(long long a, long long b){
+        long long step = (a >= b ? a : b);
+        long long res = step;
+
+        while(true){
+            if(res % a == 0 && res % b == 0)
+                break;
+            res += step;
+        }
+
+        return res;
+    }
+};
