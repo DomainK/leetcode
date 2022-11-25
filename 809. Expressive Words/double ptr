@@ -1,0 +1,45 @@
+class Solution {
+public:
+    int expressiveWords(string s, vector<string>& words) {
+        int result = 0;
+        int n = s.size();
+        for(string& word : words){
+            if(isValid(s, word))
+                result++;
+        }
+
+        return result;
+    }
+
+    bool isValid(const string& s, const string& word){
+        if(word.size() > s.size())
+            return false;
+            
+        int p1 = 0, p2 = 0;
+        while(p1 < word.size() && p2 < s.size()){
+            if(word[p1] != s[p2])
+                return false;
+            
+            char cur = s[p2];
+            int scnt = 0;
+            while(p2 < s.size() && s[p2] == cur){
+                p2++;
+                scnt++;
+            }
+
+            int wordCnt = 0;
+            while(p1 < word.size() && word[p1] == cur){
+                p1++;
+                wordCnt++;
+            }
+
+            if(wordCnt > scnt)
+                return false;
+            
+            if(wordCnt != scnt && scnt < 3)
+                return false;
+        }
+
+        return p1 == word.size() && p2 == s.size();
+    }
+};
