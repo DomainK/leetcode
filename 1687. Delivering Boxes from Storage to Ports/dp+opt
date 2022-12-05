@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int boxDelivering(vector<vector<int>>& boxes, int portsCount, int maxBoxes, int maxWeight) {
+        vector<long long> preSumW(boxes.size() + 1, 0);
+        vector<int> trips(boxes.size() + 1, 0);
+        for (int i = 1; i <= boxes.size(); i++) {
+            preSumW[i] = preSumW[i - 1] + boxes[i - 1][1];
+            if (i > 1)
+                trips[i] = trips[i - 1] + (boxes[i - 1][0] != boxes[i - 2][0]);
+        }
+
+        vector<int> dp(boxes.size() + 1, 0), tmp(boxes.size() + 1, 0);
+        deque<int> monoQueue{0};
+        for (int i = 1; i <= boxes.size(); i++) {
+            while (i - monoQueue.front() > maxBoxes || preSumW[i] - preSumW[monoQueue.front()] > maxWeight)
+                monoQueue.pop_front();
+
+            dp[i] = tmp[monoQueue.front()] + trips[i] + 2;
+
+            if (i != boxes.size()) {
+                tmp[i] = dp[i] - trips[i + 1];
+                while (!monoQueue.empty() && tmp[i] <= tmp[monoQueue.back()]) {
+                    monoQueue.pop_back();
+                }
+                monoQueue.push_back(i);
+            }
+        }
+
+        return dp[boxes.size()];
+    }
+};
